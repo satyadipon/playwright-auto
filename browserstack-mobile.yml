@@ -1,0 +1,46 @@
+# =============================
+# Set BrowserStack Credentials
+# =============================
+# Add your BrowserStack userName and accessKey here or set BROWSERSTACK_USERNAME and
+# BROWSERSTACK_ACCESS_KEY as env variables
+userName: satya_vAPOQ4
+accessKey: vAj7wRCSAL2uqCZoUja5
+
+# ======================
+# BrowserStack Reporting
+# ======================
+projectName: Horecastore Test Automation POC - Mobile
+buildName: Horecastore Test Automation POC build - Mobile
+buildIdentifier: '#${BUILD_NUMBER}' # Supports strings along with either/both ${expression}
+
+# =======================================
+# Mobile Platforms Only
+# =======================================
+platforms:
+  # Android platform
+  # - deviceName: Samsung Galaxy S24
+  #   browserName: chrome
+  #   osVersion: 14.0
+  # iOS platform
+  - deviceName: iPhone 16 Pro
+    browserName: safari
+    osVersion: 26
+
+# =======================
+# Parallels per Platform
+# =======================
+parallelsPerPlatform: 1
+
+# ==========================================
+# BrowserStack Local
+# ==========================================
+browserstackLocal: true
+
+# ===================
+# Debugging features
+# ===================
+debug: false
+networkLogs: false
+consoleLogs: errors
+testReporting: true
+testObservability: true
