@@ -1,6 +1,13 @@
 /**
  * Mobile NavigationBar Page Object
- * Handles mobile-specific navigation including hamburger menus, mobile dropdowns, and touch interactions
+ * Handles mobile-specific        // Alternative bottom navigation selectors for flexibility
+        this.bottomNavAlternative = {
+            home: this.locator('[data-testid="nav-home"], .nav-home, .bottom-nav-home, .footer-nav-home, button[aria-label*="Home"]'),
+            menu: this.locator('[data-testid="nav-menu"], .nav-menu, .bottom-nav-menu, .footer-nav-menu, button[aria-label*="Menu"]'),
+            search: this.locator('[data-testid="nav-search"], .nav-search, .bottom-nav-search, .footer-nav-search, button[aria-label*="Search"]'),
+            cart: this.locator('[data-testid="nav-cart"], .nav-cart, .bottom-nav-cart, .footer-nav-cart, button[aria-label*="Cart"]'),
+            profile: this.locator('[data-testid="nav-profile"], .nav-profile, .bottom-nav-profile, .footer-nav-profile, button[aria-label*="Profile")')
+        };ion including hamburger menus, mobile dropdowns, and touch interactions
  */
 const BasePage = require('../BasePage');
 
@@ -54,6 +61,18 @@ class MobileNavigationBarPage extends BasePage {
         
         // Mobile category expand/collapse buttons
         this.categoryExpandButtons = this.locator('.category-expand, .expand-btn, [aria-expanded]');
+
+        // Bottom Navigation Elements (Bottom Navigation Bar)
+        this.bottomNav = {
+            homeNavButton: this.locator('a:has-text("Home")'),
+            menuNavButton: this.getByRole('button', { name: 'Menu' }),
+            searchNavButton: this.getByRole('button', { name: 'Search' }),
+            cartNavButton: this.locator('a:has-text("Cart")'),
+            profileNavButton: this.getByRole('button', { name: 'Profile' })
+        };
+
+        // Bottom navigation container
+        this.bottomNavContainer = this.locator('.bottom-nav, .mobile-bottom-nav, .footer-nav, [data-testid="bottom-navigation"]');
     }
     
     /**
@@ -245,23 +264,6 @@ class MobileNavigationBarPage extends BasePage {
     }
     
     /**
-     * Click on mobile login link using BasePage methods
-     */
-    async clickMobileLoginLink() {
-        if (await this.isVisibleLocator(this.mobileLoginLink)) {
-            await this.smartClick(this.mobileLoginLink);
-        } else {
-            // Look in mobile menu
-            await this.openMobileMenu();
-            const loginInMenu = this.locator('text="Login", a[href*="login"]').first();
-            if (await this.isVisibleLocator(loginInMenu)) {
-                await this.smartClick(loginInMenu);
-            }
-        }
-        await this.waitForPageLoad();
-    }
-    
-    /**
      * Verify mobile navigation bar is loaded and visible using BasePage methods
      */
     async verifyMobileNavigationBarLoaded() {
@@ -332,6 +334,114 @@ class MobileNavigationBarPage extends BasePage {
             mobileNavItems: Object.keys(this.mobileNavItems),
             mobileSecondaryNavItems: Object.keys(this.mobileSecondaryNavItems)
         };
+    }
+
+    // Bottom Navigation Methods
+
+    /**
+     * Click on Home bottom navigation button
+     */
+    async clickBottomHome() {
+        await this.smartClick(this.bottomNav.homeNavButton);
+        await this.waitForPageLoad();
+    }
+
+    /**
+     * Click on Menu bottom navigation button (opens hamburger menu)
+     */
+    async clickBottomMenu() {
+            await this.smartClick(this.bottomNav.menuNavButton);
+        await this.waitForTimeout(1000); // Wait for menu to open
+    }
+
+    /**
+     * Click on Search bottom navigation button
+     */
+    async clickBottomSearch() {
+            await this.smartClick(this.bottomNav.searchNavButton);
+        await this.waitForPageLoad();
+    }
+
+    /**
+     * Click on Cart bottom navigation button
+     */
+    async clickBottomCart() {
+            await this.smartClick(this.bottomNav.cartNavButton);
+        await this.waitForPageLoad();
+    }
+
+    /**
+     * Click on Profile bottom navigation button (navigates to login if not logged in)
+     */
+    async clickBottomProfile() {
+            await this.smartClick(this.bottomNav.profileNavButton);
+        await this.waitForPageLoad();
+    }
+
+    /**
+     * Navigate to login using bottom profile button
+     */
+    async navigateToLoginViaBottom() {
+        await this.clickBottomProfile();
+    }
+
+    /**
+     * Verify bottom navigation is visible and functional
+     */
+    async verifyBottomNavigation() {
+        const verifications = {};
+        
+        // Check if bottom navigation container is visible
+        verifications.bottomContainer = await this.isVisibleLocator(this.bottomNavContainer);
+        
+        // Check individual bottom navigation buttons
+        for (const [key, locator] of Object.entries(this.bottomNav)) {
+            try {
+                verifications[`bottom_${key}`] = await this.isVisibleLocator(locator);
+            } catch (error) {
+                // Try alternative selectors
+                const altKey = key.replace('NavButton', '');
+                if (this.bottomNavAlternative[altKey]) {
+                    verifications[`bottom_${key}_alt`] = await this.isVisibleLocator(this.bottomNavAlternative[altKey]);
+                }
+            }
+        }
+        
+        return verifications;
+    }
+
+    /**
+     * Get active bottom navigation item (if highlighted/selected)
+     */
+    async getActiveBottomNavItem() {
+        const activeSelectors = [
+            '.bottom-nav .active',
+            '.footer-nav .active',
+            '.mobile-bottom-nav .selected',
+            '[data-testid*="nav"][aria-selected="true"]',
+            '.nav-item.active'
+        ];
+
+        for (const selector of activeSelectors) {
+            try {
+                const activeElement = this.locator(selector);
+                if (await this.isVisibleLocator(activeElement)) {
+                    return await this.getTextFromLocator(activeElement);
+                }
+            } catch (error) {
+                continue;
+            }
+        }
+        
+        return null;
+    }
+
+    /**
+     * Check if bottom navigation is visible
+     */
+    async isBottomNavigationVisible() {
+        return await this.isVisibleLocator(this.bottomNavContainer) ||
+               await this.isVisibleLocator(this.bottomNav.homeNavButton);
     }
 }
 

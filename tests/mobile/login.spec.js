@@ -3,71 +3,79 @@ const { test } = require('../../lamdatest-setup');
 const config = require('../../config');
 const MobileLoginPage = require('../../pages/mobile/LoginPage');
 const MobileHomePage = require('../../pages/mobile/HomePage');
+const MobileNavigationBarPage = require('../../pages/mobile/NavigationBarPage');
+
 
 test.describe('Mobile Login/Logout Flow', () => {
   /** @type {import('../../pages/mobile/LoginPage')} */
   let loginPage;
   /** @type {import('../../pages/mobile/HomePage')} */
   let homePage;
+  /** @type {import('../../pages/mobile/NavigationBarPage')} */
+  let navigationBar;
+
 
   test.beforeEach(async ({ page }) => {
-    // loginPage = new MobileLoginPage(page);
-    // homePage = new MobileHomePage(page);
+    loginPage = new MobileLoginPage(page);
+    homePage = new MobileHomePage(page);
+    navigationBar = new MobileNavigationBarPage(page);
 
-    await page.goto('https://ipapi.co/json/');
-    const body = await page.textContent('body');
-    const json = JSON.parse(body);
-    console.log("Country via IP API:", json.country_name);
-    
     // Navigate to homepage first
-    // await homePage.navigateToHomePage();
+    await homePage.navigateToHomePage();
   });
-
-  // test.afterEach(async ({ context, page }) => {
-  //   try {
-  //     if (!page.isClosed()) {
-  //       await page.close({ runBeforeUnload: true });
-  //     }
-  //     // await context.close();   // ✅ This will end the session on BrowserStack
-  //   } catch (err) {
-  //     console.warn('Teardown warning:', err);
-  //   }
-  // });
 
   test('should login and logout successfully with private user on mobile @smoke @mobile @critical', async ({ page, browserName }) => {
     console.log(`Testing on browser: ${browserName}`);
     
-    // const privateUser = config.getCredentials();
+    const privateUser = config.getCredentials();
 
-    // // Navigate to login page using mobile page objects
-    // await loginPage.navigateToLogin();
+    // Navigate to login page using mobile page objects (this will use bottom navigation)
+    await loginPage.navigateToLogin();
     
-    // // Verify login form is visible
-    // expect(await loginPage.isLoginFormVisible()).toBe(true);
+    // Verify login form is visible
+    expect(await loginPage.isLoginFormVisible()).toBe(true);
     
-    // // Perform login using mobile page object
-    // await loginPage.login(privateUser.username, privateUser.password);
+    // Perform login using mobile page object
+    await loginPage.login(privateUser.username, privateUser.password);
 
-    // // Verify successful login using mobile page object
-    // await homePage.verifyUserLoggedIn();
-    // expect(await homePage.isOnHomePage()).toBe(true);
+    // Verify successful login using mobile page object
+    await homePage.verifyUserLoggedIn();
+    expect(await homePage.isOnHomePage()).toBe(true);
 
-    // // Perform logout using mobile page object
-    // await homePage.logout();
+    // Perform logout using mobile page object
+    await homePage.logout();
 
-    // // Verify logout using mobile page object
-    // await homePage.verifyUserLoggedOut();
-    
-    // // Verify we're still on a valid page
-    // const currentUrl = page.url();
-    // console.log('Current URL after logout:', currentUrl);
-    
-    // // Just verify the page loaded successfully and we have login functionality
-    // expect(currentUrl).toBeTruthy();
-    // expect(currentUrl).not.toContain('error');
+    // Verify logout using mobile page object
+    await homePage.verifyUserLoggedOut();
     
     console.log('Mobile login/logout test completed successfully');
   });
+
+  // test('should verify bottom navigation functionality @mobile @navigation', async ({ page }) => {
+  //   // Verify bottom navigation is visible
+  //   const bottomVerification = await navigationBar.verifyBottomNavigation();
+  //   console.log('Bottom navigation verification:', bottomVerification);
+    
+  //   // Test different bottom navigation buttons
+  //   console.log('Testing bottom Home button...');
+  //   await navigationBar.clickBottomHome();
+  //   expect(await homePage.isOnHomePage()).toBe(true);
+    
+  //   console.log('Testing bottom Search button...');
+  //   await navigationBar.clickBottomSearch();
+  //   // Add search page verification if needed
+    
+  //   console.log('Testing bottom Cart button...');
+  //   await navigationBar.clickBottomCart();
+  //   // Add cart page verification if needed
+    
+  //   console.log('Testing bottom Profile button (should navigate to login)...');
+  //   await navigationBar.clickBottomProfile();
+  //   // Should navigate to login page
+  //   expect(await loginPage.isOnLoginPage()).toBe(true);
+    
+  //   console.log('Bottom navigation test completed successfully');
+  // });
 
   // test('should show error message for invalid credentials on mobile', async ({ page }) => {
   //   const invalidUser = { username: 'invalid@test.com', password: 'wrongpassword' };

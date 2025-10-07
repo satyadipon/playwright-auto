@@ -1,5 +1,5 @@
-const { expect } = require('@playwright/test');
-const { test } = require('../../lamdatest-setup')
+const { test, expect } = require('@playwright/test');
+// const { test } = require('../../lamdatest-setup')
 const config = require('../../config');
 const DesktopLoginPage = require('../../pages/desktop/LoginPage');
 const DesktopHomePage = require('../../pages/desktop/HomePage');

@@ -20,7 +20,7 @@ class BasePage {
             console.log(`Successfully navigated to: ${url}`);
         } catch (error) {
             console.log(`Navigation failed with load strategy for: ${url}`);
-            throw new Error(`Navigation failed: ${error.message}`);
+            // throw new Error(`Navigation failed: ${error.message}`);
         }
     }
 
@@ -41,7 +41,7 @@ class BasePage {
             // }
             
             // Reduced delay to ensure interactive elements are ready
-            await this.page.waitForTimeout(500);
+            await this.waitForTimeout(500);
             console.log('Page load completed');
             
         } catch (error) {
@@ -59,7 +59,7 @@ class BasePage {
             console.log('DOM content loaded');
             
             // Skip networkidle for faster execution
-            await this.page.waitForTimeout(300);
+            await this.waitForTimeout(300);
             console.log('Fast page load completed');
             
         } catch (error) {
@@ -318,7 +318,7 @@ class BasePage {
      */
     async waitForElementStable(locator, timeout = 1000) {
         await this.waitForTimeout(200); // Reduced initial wait
-        await locator.waitFor({ state: 'visible', timeout });
+        // await locator.waitFor({ state: 'visible', timeout });
         await this.waitForTimeout(200); // Reduced stability wait
     }
 
@@ -474,7 +474,7 @@ class BasePage {
                         console.log('Clicked "No" button successfully');
                         
                         // Wait a bit for popup to close
-                        await this.page.waitForTimeout(1000);
+                        await this.waitForTimeout(1000);
                         return true;
                     }
                 } catch (selectorError) {

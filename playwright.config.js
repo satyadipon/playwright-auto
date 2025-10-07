@@ -60,16 +60,16 @@ export default defineConfig({
   /* Configure projects for major browsers and devices */
   projects: [
     // BrowserStack Desktop Projects
-    {
-      name: 'desktop-macos-safari',
-      testDir: './tests/desktop',
-      use: { 
-        viewport: null,
-        launchOptions: {
-          args: ['--start-maximized'],
-        },
-      },
-    },
+    // {
+    //   name: 'desktop-macos-safari',
+    //   testDir: './tests/desktop',
+    //   use: { 
+    //     viewport: null,
+    //     launchOptions: {
+    //       args: ['--start-maximized'],
+    //     },
+    //   },
+    // },
     // {
     //   name: 'desktop-windows-edge',
     //   testDir: './tests/desktop',
@@ -82,34 +82,34 @@ export default defineConfig({
     // },
 
     // BrowserStack Mobile Projects
-    {
-      name: 'mobile-samsung-chrome',
-      testDir: './tests/mobile',
-      use: { 
-        hasTouch: true,
-        isMobile: true,
-        viewport: { width: 360, height: 740 }, // Samsung Galaxy S22 viewport
-      },
-    },
-    {
-      name: 'mobile-iphone-safari',
-      testDir: './tests/mobile',
-      use: { 
-        hasTouch: true,
-        isMobile: true,
-        viewport: { width: 390, height: 844 }, // iPhone 14 Pro viewport
-      },
-    },
-
-    // Local testing projects (existing ones for local development)
     // {
-    //   name: 'desktop-chromium',
-    //   testDir: './tests/desktop',
+    //   name: 'mobile-samsung-chrome',
+    //   testDir: './tests/mobile',
     //   use: { 
-    //     ...devices['Desktop Chrome'],
-    //     viewport: null,
+    //     hasTouch: true,
+    //     isMobile: true,
+    //     viewport: { width: 360, height: 740 }, // Samsung Galaxy S22 viewport
     //   },
     // },
+    // {
+    //   name: 'mobile-iphone-safari',
+    //   testDir: './tests/mobile',
+    //   use: { 
+    //     hasTouch: true,
+    //     isMobile: true,
+    //     viewport: { width: 390, height: 844 }, // iPhone 14 Pro viewport
+    //   },
+    // },
+
+    // Local testing projects (existing ones for local development)
+    {
+      name: 'desktop-chromium',
+      testDir: './tests/mobile',
+      use: { 
+        ...devices['Desktop Chrome'],
+        viewport: { width: 360, height: 740 }
+      },
+    },
     // {
     //   name: 'desktop-firefox',
     //   testDir: './tests/desktop',

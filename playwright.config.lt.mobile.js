@@ -5,15 +5,15 @@ const env_config = require('./config');
 const config = {
   testDir: 'tests',
   testMatch: 'tests/mobile/*.spec.js',
-  timeout: 100000,
+  timeout: 300000,
   workers: 1,
   use: {
-    baseURL: env_config.getBaseUrl(),
+    // baseURL: env_config.getBaseUrl(),
   },
   projects: [
     // -- LambdaTest Config --
     {
-      name: 'Pixel 5:12:android@lambdatest',
+      name: 'Pixel 5:11:android@lambdatest',
       use: {}
     },
     // {

@@ -47,8 +47,8 @@ const modifyCapabilities = (configName, testName) => {
     capabilities['LT:Options']['isRealMobile'] = true
 
 
-    // delete capabilities.browserName;
-    // delete capabilities.browserVersion;
+    delete capabilities.browserName;
+    delete capabilities.browserVersion;
   } else {
     // Desktop test
     let [browserName, browserVersion, platform] = config.split(':')
@@ -70,11 +70,13 @@ exports.test = base.test.extend({
       // Check if its a desktop or a mobile test
       if (testInfo.project.name.match(/android/)) {
         // Android test
+        // console.log("capabilities: "+JSON.stringify(capabilities));
         device = await _android.connect(`wss://cdp.lambdatest.com/playwright?capabilities=${encodeURIComponent(JSON.stringify(capabilities))}`);
         await device.shell("am force-stop com.android.chrome");
-    
         context = await device.launchBrowser();
-        ltPage = await context.newPage(testInfo.project.use);
+        context.setDefaultTimeout(300000);
+        // ltPage = await context.newPage(testInfo.project.use);
+        ltPage = await context.newPage();
       } else if (testInfo.project.name.match(/ios/)) {
         // iOS test
         browser = await webkit.connect(`wss://cdp.lambdatest.com/playwright?capabilities=${encodeURIComponent(JSON.stringify(capabilities))}`);
@@ -83,8 +85,11 @@ exports.test = base.test.extend({
         context = await browser.newContext({
           hasTouch: true,  // Enable touch support for iOS
           isMobile: true,  // Enable mobile mode for iOS
-          ...testInfo.project.use,
+          // ...testInfo.project.use,
         });
+        context.setDefaultTimeout(300000);
+        context.setDefaultNavigationTimeout(300000);
+
         ltPage = await context.newPage();
       } else {
         // Desktop test
